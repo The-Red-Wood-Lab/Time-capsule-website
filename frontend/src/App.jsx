@@ -1,4 +1,6 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import TimeCapsule from "./components/TimeCapsule";
+import './index.css'
 
 export default function App() {
   return (
@@ -9,6 +11,7 @@ export default function App() {
       <SignedIn>
         <UserButton />
       </SignedIn>
+      
     </header>
   );
 }
