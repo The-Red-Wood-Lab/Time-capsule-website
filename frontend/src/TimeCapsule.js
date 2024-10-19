@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Moon, Sun } from 'lucide-react';
 
