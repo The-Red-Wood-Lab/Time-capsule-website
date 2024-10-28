@@ -26,23 +26,23 @@ const TimeCapsule = () => {
     setRevealDate('');
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+  // const toggleDarkMode = () => {
+  //   setDarkMode(!darkMode);
+  // };
 
   return (
     <motion.div
-      className={`min-h-screen flex flex-col justify-center items-center p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
+      className={`min-h-screen pt-2 flex flex-col justify-center items-center p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
       initial={{ backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }} // Initial background color
       animate={{ backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }} // Animate background color
       transition={{ duration: 0.5 }} // Transition duration
     >
-      <button
+      {/* <button
         onClick={toggleDarkMode}
         className={`absolute top-4 right-4 p-2 rounded-full ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
       >
         {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-      </button>
+      </button> */}
       <motion.h1 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

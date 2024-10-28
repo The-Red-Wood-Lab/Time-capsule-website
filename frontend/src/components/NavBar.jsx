@@ -1,13 +1,24 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { Clock } from "lucide-react";
 
 const NavBar = () => {
   return (
-    <nav className="bg-gray-900 shadow-md">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-blue-600">Time Capsule</h1>
-        <div className="flex items-center space-x-4">
+    <header className="py-4 px-6 bg-background border-b">
+    <div className="container mx-auto flex justify-between items-center">
+      <div className="flex items-center space-x-2">
+        <Clock className="h-6 w-6" />
+        <span className="text-xl font-bold">TimeCapsule</span>
+      </div>
+      <nav className="hidden md:flex space-x-4">
+        <a href="#features" className="text-sm hover:underline">Features</a>
+        <a href="#how-it-works" className="text-sm hover:underline">How It Works</a>
+        <a href="#" className="text-sm hover:underline">About</a>
+        <a href="#" className="text-sm hover:underline">Contact</a>
+      </nav>
+      <div className="flex items-center space-x-4">
           <SignedOut>
-            <SignInButton className="bg-blue-600 text-black rounded-lg py-2 px-4 hover:bg-blue-700 transition duration-300">
+            <SignInButton className="px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition duration-300"
+            >
               Sign In
             </SignInButton>
           </SignedOut>
@@ -15,8 +26,8 @@ const NavBar = () => {
             <UserButton />
           </SignedIn>
         </div>
-      </div>
-    </nav>
+    </div>
+  </header>
   );
 };
 

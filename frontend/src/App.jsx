@@ -1,10 +1,10 @@
-
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Hero from "./components/Hero";
 import NavBar from "./components/NavBar"; 
+import ProtectedRoute from "./components/ProtectedRoute";
 import TimeCapsule from "./components/TimeCapsule";
 import SignInComponent from "./components/SignIn";
-import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound ";
 
 export default function App() {
@@ -13,6 +13,7 @@ export default function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Hero />} />
+        <Route path="/sign-in" element={<SignInComponent />} />
         <Route
           path="/timecapsule"
           element={
@@ -21,8 +22,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/sign-in" element={<SignInComponent />} /> 
-        <Route path="*" element={<NotFound />} /> 
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
