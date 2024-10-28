@@ -26,9 +26,9 @@ const TimeCapsule = () => {
     setRevealDate('');
   };
 
-  // const toggleDarkMode = () => {
-  //   setDarkMode(!darkMode);
-  // };
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   return (
     <motion.div
@@ -37,12 +37,12 @@ const TimeCapsule = () => {
       animate={{ backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }} // Animate background color
       transition={{ duration: 0.5 }} // Transition duration
     >
-      {/* <button
+      <button
         onClick={toggleDarkMode}
         className={`absolute top-4 right-4 p-2 rounded-full ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
       >
         {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-      </button> */}
+      </button>
       <motion.h1 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
