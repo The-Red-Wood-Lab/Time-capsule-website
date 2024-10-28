@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Moon, Sun } from 'lucide-react';
 
@@ -32,7 +32,7 @@ const TimeCapsule = () => {
 
   return (
     <motion.div
-      className={`min-h-screen flex flex-col justify-center items-center p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
+      className={`min-h-screen pt-2 flex flex-col justify-center items-center p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
       initial={{ backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }} // Initial background color
       animate={{ backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }} // Animate background color
       transition={{ duration: 0.5 }} // Transition duration
