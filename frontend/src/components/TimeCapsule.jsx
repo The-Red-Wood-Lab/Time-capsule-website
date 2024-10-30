@@ -1,212 +1,157 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Lock, Plus, Trash2, X } from 'lucide-react';
+import  { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Send, Moon, Sun } from 'lucide-react';
 
-const StarField = () => (
-  <div className="absolute inset-0 overflow-hidden">
-    {[...Array(50)].map((_, i) => (
-      <div
-        key={i}
-        className="absolute rounded-full bg-white"
-        style={{
-          top: `${Math.random() * 100}%`,
-          left: `${Math.random() * 100}%`,
-          width: `${Math.random() * 3 + 1}px`,
-          height: `${Math.random() * 3 + 1}px`,
-        }}
-      />
-    ))}
-  </div>
-);
-
-export default function StaticMonochromeTimeCapsule() {
-  const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState('');
+const TimeCapsule = () => {
+  const [name, setName] = useState('');
   const [message, setMessage] = useState('');
-  const [openDate, setOpenDate] = useState(null);
-  const [isSealed, setIsSealed] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(null);
-  const [image, setImage] = useState(null);
-  const [file, setFile] = useState(null);
+  const [revealDate, setRevealDate] = useState('');
+  const [darkMode, setDarkMode] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false); // State to track submission
 
-  const maxItems = 7;
-  const maxFileSize = 5 * 1024 * 1024; // 5MB
-
-  const updateRemainingTime = useCallback(() => {
-    if (isSealed && openDate) {
-      const now = new Date();
-      const difference = openDate.getTime() - now.getTime();
-
-      if (difference > 0) {
-        setRemainingTime({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((difference % (1000 * 60)) / 1000),
-        });
-      } else {
-        setIsSealed(false);
-        setRemainingTime(null);
-      }
-    }
-  }, [isSealed, openDate]);
-
-  useEffect(() => {
-    const timer = setInterval(updateRemainingTime, 1000);
-    return () => clearInterval(timer);
-  }, [updateRemainingTime]);
-
-  const addItem = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (newItem.trim() && items.length < maxItems) {
-      setItems([...items, newItem.trim()]);
-      setNewItem('');
-    }
+    console.log('Time Capsule created:', { name, message, revealDate });
+    setIsSubmitted(true); // Set submission state
+    // Reset form
+    setName('');
+    setMessage('');
+    setRevealDate('');
+    setTimeout(() => setIsSubmitted(false), 3000); // Hide message after 3 seconds
   };
 
-  const removeItem = (index) => {
-    setItems(items.filter((_, i) => i !== index));
+  const handleCancel = () => {
+    setName('');
+    setMessage('');
+    setRevealDate('');
   };
 
-  const sealTimeCapsule = () => {
-    if ((items.length > 0 || image || file) && openDate && message.trim()) {
-      setIsSealed(true);
-    }
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
   };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (file && file.size <= maxFileSize) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert('Image size exceeds 5MB limit.');
-    }
-  };
-
-  const handleFileUpload = (e) => {
-    const uploadedFile = e.target.files?.[0];
-    if (uploadedFile && uploadedFile.size <= maxFileSize) {
-      setFile(uploadedFile);
-    } else {
-      alert('File size exceeds 5MB limit.');
-    }
-  };
-
-  const removeImage = () => setImage(null);
-  const removeFile = () => setFile(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black flex items-center justify-center p-4">
-      <StarField />
-      <div className="max-w-md w-full relative">
-        <div className="bg-black/50 backdrop-blur-md rounded-3xl p-8 shadow-lg border border-gray-500/30">
-          <h1 className="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400">
-            Time Capsule
-          </h1>
-
-          {!isSealed ? (
-            <div>
-              <form onSubmit={addItem} className="mb-4 flex gap-2">
-                <input
-                  type="text"
-                  value={newItem}
-                  onChange={(e) => setNewItem(e.target.value)}
-                  placeholder="Add an item to your capsule"
-                  className="flex-grow bg-gray-900/50 border-gray-500/50 text-gray-100 placeholder-gray-300 p-2 rounded-md"
-                />
-                <button
-                  type="submit"
-                  disabled={items.length >= maxItems}
-                  className="bg-gray-600 hover:bg-gray-700 p-2 rounded-md"
-                >
-                  <Plus className="h-4 w-4" />
-                </button>
-              </form>
-
-              <ul className="mb-4">
-                {items.map((item, index) => (
-                  <li key={index} className="flex justify-between items-center bg-gray-900/50 border-gray-500/50 text-gray-100 p-2 rounded-md mb-2">
-                    <span>{item}</span>
-                    <button onClick={() => removeItem(index)} className="text-gray-300 hover:text-gray-100">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-
+    <motion.div
+      className={`min-h-screen pt-2 flex flex-col justify-center items-center p-4 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
+      initial={{ backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }} // Initial background color
+      animate={{ backgroundColor: darkMode ? '#1a202c' : '#f7fafc' }} // Animate background color
+      transition={{ duration: 0.5 }} // Transition duration
+    >
+      <button
+        onClick={toggleDarkMode}
+        className={`absolute top-4 right-4 p-2 rounded-full ${darkMode ? 'bg-gray-800' : 'bg-gray-200'}`}
+      >
+        {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+      </button>
+      <motion.h1 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="text-4xl font-bold mb-8"
+      >
+        Time Capsule
+      </motion.h1>
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className={`w-full max-w-md rounded-lg shadow-lg p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+      >
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold">Create Your Time Capsule</h2>
+          <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>Store your memories for the future</p>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.3 }} 
+              className="form-field"
+            >
+              <label htmlFor="name" className="block text-sm font-medium mb-1">Name</label>
               <input
-                type="datetime-local"
-                value={openDate ? openDate.toISOString().slice(0, -1) : ''}
-                onChange={(e) => setOpenDate(new Date(e.target.value))}
-                className="w-full mb-4 bg-gray-900/50 border-gray-500/50 text-gray-100 placeholder-gray-300 p-2 rounded-md"
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                className={`w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}
+                required
               />
-              
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.3 }} 
+              className="form-field"
+            >
+              <label htmlFor="message" className="block text-sm font-medium mb-1">Message</label>
               <textarea
+                id="message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                placeholder="Write a message..."
-                className="w-full mb-4 bg-gray-900/50 border-gray-500/50 text-gray-100 placeholder-gray-300 p-2 rounded-md"
-              />
-
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={handleFileUpload}
-                className="mb-4 block w-full text-sm text-gray-300"
-              />
-              {file && (
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-gray-100">{file.name}</span>
-                  <button onClick={removeFile} className="text-gray-300 hover:text-gray-100">
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              )}
-
-              <div className="mb-4">
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="sr-only" />
-                <label className="flex items-center justify-center w-full h-32 px-4 bg-gray-900/50 border-2 border-gray-500 border-dashed rounded-md cursor-pointer">
-                  {image ? (
-                    <img src={image} alt="Uploaded" className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="text-sm text-gray-300">Click to upload image</span>
-                  )}
-                </label>
-                {image && (
-                  <button onClick={removeImage} className="absolute top-2 right-2 text-gray-300 hover:text-gray-100">
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
+                placeholder="Your message for the future"
+                className={`w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}
+                rows="4"
+                required
+              ></textarea>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.3 }} 
+              className="form-field"
+            >
+              <label htmlFor="reveal-date" className="block text-sm font-medium mb-1">Reveal Date</label>
+              <div className="flex">
+                <input
+                  id="reveal-date"
+                  type="date"
+                  value={revealDate}
+                  onChange={(e) => setRevealDate(e.target.value)}
+                  className={`w-full px-3 py-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`}
+                  required
+                />
               </div>
-
-              <button
-                onClick={sealTimeCapsule}
-                disabled={!openDate || (!items.length && !image && !file) || !message.trim()}
-                className="w-full bg-gradient-to-b from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 p-2 rounded-md"
-              >
-                <Lock className="mr-2 h-4 w-4" /> Seal Time Capsule
-              </button>
-            </div>
-          ) : (
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-100">Time Capsule Launched!</h2>
-              {remainingTime && (
-                <div className="grid grid-cols-4 gap-2 mb-6">
-                  {Object.entries(remainingTime).map(([unit, value]) => (
-                    <div key={unit} className="bg-gray-900/50 rounded-lg p-2">
-                      <div className="text-2xl font-bold text-gray-100">{value}</div>
-                      <div className="text-xs text-gray-300">{unit}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+            </motion.div>
+          </div>
+          <div className="mt-6 flex justify-between">
+            <button 
+              type="button" 
+              onClick={handleCancel} 
+              className={`px-4 py-2 rounded-md transition-colors ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-300 hover:bg-gray-400'}`}
+            >
+              Cancel
+            </button>
+            <motion.button 
+              type="submit" 
+              whileHover={{ scale: 1.05 }} // Button hover effect
+              className="px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700 transition-colors flex items-center"
+            >
+              <Send className="mr-2 h-4 w-4" /> Send to Future
+            </motion.button>
+          </div>
+        </form>
+        {/* Submission Confirmation Message */}
+        {isSubmitted && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: -10 }} 
+            transition={{ duration: 0.3 }} 
+            className={`mt-4 p-2 rounded-md ${darkMode ? 'bg-green-600 text-white' : 'bg-green-200 text-gray-900'}`}
+          >
+            Time Capsule created successfully!
+          </motion.div>
+        )}
+      </motion.div>
+      <footer className={`mt-8 text-center text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <p>&copy; 2023 Time Capsule. All rights reserved.</p>
+        <a href="/about" className="hover:underline">About</a>
+      </footer>
+    </motion.div>
   );
-}
+};
+
+export default TimeCapsule;
